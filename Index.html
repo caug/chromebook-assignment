@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      h1 {
+        color: #333;
+      }
+      input[type="file"] {
+        margin: 20px 0;
+      }
+      input[type="button"] {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      input[type="button"]:hover {
+        background-color: #45a049;
+      }
+      #status {
+        margin-top: 20px;
+        color: #333;
+      }
+      #log {
+        margin-top: 20px;
+        text-align: left;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Upload CSV File</h1>
+      <form id="uploadForm">
+        <input type="file" id="csvFile" name="csvFile" accept=".csv">
+        <input type="button" value="Upload" onclick="uploadFile()">
+      </form>
+      <div id="status"></div>
+      <div id="log"></div>
+    </div>
+    <script>
+      function uploadFile() {
+        var file = document.getElementById('csvFile').files[0];
+        if (!file) {
+          document.getElementById('status').innerText = 'No file selected.';
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          var csvData = e.target.result;
+          document.getElementById('status').innerText = 'Uploading...';
+          google.script.run.withSuccessHandler(function(result) {
+            document.getElementById('status').innerText = 'Upload successful!';
+            document.getElementById('log').innerHTML = result;
+          }).withFailureHandler(function(error) {
+            document.getElementById('status').innerText = 'Upload failed: ' + error.message;
+          }).processCSV(csvData);
+        };
+        reader.readAsText(file);
+      }
+    </script>
+  </body>
+</html>
