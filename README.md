@@ -55,6 +55,7 @@ Click on the Upload button.
 View the update results:
 
 The app will display the progress and results of the device updates in the browser window.
+
 CSV File Format
 The CSV file should have the following format:
 
